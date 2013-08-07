@@ -30,7 +30,7 @@ public class AddExpense extends Activity {
 	SharedPreferences fieldValues;
 	SharedPreferences.Editor fieldEdit;
 	public static String[] categories = {
-		"Bills", "Education", "Food", "Gas", "Groceries", "Rent", "Repairs", "Others"
+		"Bills", "Food", "Gas", "Groceries", "Rent", "Repairs", "Others"
 	};
 	
 	@Override

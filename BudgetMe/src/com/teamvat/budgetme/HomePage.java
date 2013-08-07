@@ -12,10 +12,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
@@ -259,9 +263,30 @@ public class HomePage extends Activity {
     		totalDailyExpense = rowPointer.getDouble(rowPointer.getColumnIndex("SUM"));
     	}
     	TextView daySpentText = (TextView) findViewById(R.id.daySpent);
-		daySpentText.setText("Money Spent: " + new DecimalFormat("#.##").format(totalDailyExpense) + " " + currency);
+    	// color coding the spent money stats
+    	String spentMoney = new DecimalFormat("#.##").format(totalDailyExpense).toString();
+    	SpannableStringBuilder spentBuilder = new SpannableStringBuilder();
+    	SpannableString spentYellow = new SpannableString(spentMoney);
+    	spentYellow.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, spentMoney.length(), 0);
+    	spentBuilder.append("Money Spent: ");
+    	spentBuilder.append(spentYellow);
+    	spentBuilder.append(" " + currency);
+//		daySpentText.setText("Money Spent: " + spentRed + " " + currency);
+    	daySpentText.setText(spentBuilder);
 		TextView dayRemText = (TextView) findViewById(R.id.dayRem);
-		dayRemText.setText("Money Remaining: " + new DecimalFormat("#.##").format(dailyBudget - totalDailyExpense) + " " + currency);
+		// color coding remaining money stats
+		String remMoney = new DecimalFormat("#.##").format(dailyBudget - totalDailyExpense).toString();
+		SpannableStringBuilder remBuilder = new SpannableStringBuilder();
+		SpannableString remGreen = new SpannableString(remMoney);
+		if(dailyBudget - totalDailyExpense > 0)
+			remGreen.setSpan(new ForegroundColorSpan(Color.GREEN), 0, remMoney.length(), 0);
+		else
+			remGreen.setSpan(new ForegroundColorSpan(Color.RED), 0, remMoney.length(), 0);
+		remBuilder.append("Money Remaining: ");
+		remBuilder.append(remGreen);
+		remBuilder.append(" " + currency);
+//		dayRemText.setText("Money Remaining: " + new DecimalFormat("#.##").format(dailyBudget - totalDailyExpense) + " " + currency);
+		dayRemText.setText(remBuilder);
 		
 		db.close();
 	}
@@ -319,12 +344,34 @@ public class HomePage extends Activity {
     	while (rowPointer.moveToNext()) {
     		totalMonthlyExpense = rowPointer.getDouble(rowPointer.getColumnIndex("SUM"));
     	}
+    	
     	TextView monExpenses = (TextView) findViewById(R.id.moneySpentText);
-    	monExpenses.setText("Money Spent: " + new DecimalFormat("#.##").format(totalMonthlyExpense) + " " + currency);
+    	// color coding the spent money stats
+    	String spentMoney = new DecimalFormat("#.##").format(totalMonthlyExpense).toString();
+    	SpannableStringBuilder spentBuilder = new SpannableStringBuilder();
+    	SpannableString spentYellow = new SpannableString(spentMoney);
+    	spentYellow.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, spentMoney.length(), 0);
+    	spentBuilder.append("Money Spent: ");
+    	spentBuilder.append(spentYellow);
+    	spentBuilder.append(" " + currency);
+//    	monExpenses.setText("Money Spent: " + new DecimalFormat("#.##").format(totalMonthlyExpense) + " " + currency);
+    	monExpenses.setText(spentBuilder);
     	
     	Double moneyRemaining = monthlyBudget - totalMonthlyExpense;
     	TextView remText = (TextView) findViewById(R.id.remainderText);
-    	remText.setText("Money Remaining: " + new DecimalFormat("#.##").format(moneyRemaining) + " " + currency);
+    	// color coding remaining money stats
+    	String remMoney = new DecimalFormat("#.##").format(moneyRemaining).toString();
+    	SpannableStringBuilder remBuilder = new SpannableStringBuilder();
+    	SpannableString remGreen = new SpannableString(remMoney);
+    	if(moneyRemaining > 0)
+    		remGreen.setSpan(new ForegroundColorSpan(Color.GREEN), 0, remMoney.length(), 0);
+    	else
+    		remGreen.setSpan(new ForegroundColorSpan(Color.RED), 0, remMoney.length(), 0);
+    	remBuilder.append("Money Remaining: ");
+    	remBuilder.append(remGreen);
+    	remBuilder.append(" " + currency);
+//    	remText.setText("Money Remaining: " + new DecimalFormat("#.##").format(moneyRemaining) + " " + currency);
+    	remText.setText(remBuilder);
     	
     	db.close();
 	} 
